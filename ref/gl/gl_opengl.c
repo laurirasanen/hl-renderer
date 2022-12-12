@@ -945,6 +945,7 @@ qboolean R_Init( void )
 	R_SpriteInit();
 	R_StudioInit();
 	R_AliasInit();
+	R_ShaderInit();
 	R_ClearDecals();
 	R_ClearScene();
 

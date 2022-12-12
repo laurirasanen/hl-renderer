@@ -72,6 +72,7 @@ extern poolhandle_t r_temppool;
 #define SUBDIVIDE_SIZE	64
 #define MAX_DECAL_SURFS	4096
 #define MAX_DRAW_STACK	2		// normal view and menu view
+#define MAX_SHADERS 64
 
 #define SHADEDOT_QUANT 	16		// precalculated dot products for quantized angles
 #define SHADE_LAMBERT	1.495f
@@ -453,6 +454,14 @@ void CL_DrawTracers( double frametime, particle_t *cl_active_tracers );
 //
 void R_DrawPost( void );
 void R_PostNuke( char *buffer, int width, int height, int stride, int size );
+
+//
+// gl_shader.c
+//
+void R_ShaderInit( void );
+GLhandleARB R_ShaderCompile( const GLcharARB *src, GLenum type );
+void R_ShaderProgramCompile( const GLcharARB *vert, const GLcharARB *frag );
+void R_ShaderUse( int prog );
 
 //
 // gl_sprite.c
