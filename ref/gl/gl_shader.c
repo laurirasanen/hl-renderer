@@ -1,7 +1,7 @@
 #include "gl_local.h"
 #include "gl_shader.h"
 
-static GLhandleARB gl_shaders[MAX_SHADERS];
+static GLhandleARB gl_shaders[GL_SHADER_MAX];
 static uint gl_numShaders;
 
 void R_ShaderInit( void )
@@ -43,7 +43,7 @@ void R_ShaderProgramCompile( const GLcharARB *vertSrc, const GLcharARB *fragSrc 
     GLhandleARB fragShader = 0;
     GLhandleARB program = pglCreateProgramObjectARB();
 
-    ASSERT( gl_numShaders < MAX_SHADERS );
+    ASSERT( gl_numShaders < GL_SHADER_MAX );
 
     if (vertSrc)
     {
@@ -75,7 +75,7 @@ void R_ShaderProgramCompile( const GLcharARB *vertSrc, const GLcharARB *fragSrc 
 
 void R_ShaderUse( int prog )
 {
-    ASSERT( prog >= -1 && prog < MAX_SHADERS );
+    ASSERT( prog >= GL_SHADER_NONE && prog < GL_SHADER_MAX );
 
     if (prog == GL_SHADER_NONE)
     {

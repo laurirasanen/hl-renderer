@@ -1,5 +1,16 @@
+#include "gl_rpost.h"
 #include "gl_local.h"
+#include "gl_shader.h"
 #include "xash3d_mathlib.h"
+
+//static gl_texture_t* post_texture = NULL;
+static unsigned int post_texture = 0;
+
+void R_InitPost( void )
+{
+    //post_texture = GL_AllocTexture( POST_TEXTURE, TF_NEAREST );
+    pglGenTextures( 1, &post_texture );
+}
 
 /*
 ================
@@ -8,37 +19,52 @@ R_DrawPost
 */
 void R_DrawPost( void )
 {
-    char *buffer;
-    int tempsize = 100;
-    int width = gpGlobals->width;
-    int height = gpGlobals->height;
-    int stride = 4;
-    int size = width * height * stride;
+    ASSERT( post_texture > 0 );
 
-    pglDisable( GL_TEXTURE_2D );
+    pglEnable( GL_TEXTURE_2D );
     pglDisable( GL_BLEND );
+    pglDisable( GL_CULL_FACE );
+
+    pglMatrixMode( GL_TEXTURE );
+    pglLoadIdentity();
+    pglScalef( 1, 1, 1 );
+
     pglReadBuffer( GL_BACK );
     pglDrawBuffer( GL_BACK );
 
-	buffer = Mem_Malloc( r_temppool, size );
-    pglReadPixels( 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer );
+    GL_SelectTexture( XASH_TEXTURE5 );
+    pglBindTexture( GL_TEXTURE_2D, post_texture );
 
-    R_PostNuke( buffer, width, height, stride, size );
+    R_PostNuke();
 
-    // FIXME: read/draw pixels is very slow.
-    // this is just to get things up and running
-    pglDrawPixels( width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer );
-
-    Mem_Free( buffer );
-
-    pglEnable( GL_TEXTURE_2D );
-	pglDisable( GL_BLEND );
+    GL_SelectTexture( XASH_TEXTURE0 );
+    R_ShaderUse( GL_SHADER_NONE );
+    pglBindTexture( GL_TEXTURE_2D, 0 );
+    pglEnable( GL_CULL_FACE );
 }
 
-void R_PostNuke( char *buffer, int width, int height, int stride, int size )
+void R_PostRead( void )
 {
-    for ( size_t i = 0; i < size; i++ )
-    {
-        buffer[i] += 128;
-    }    
+    int width = gpGlobals->width;
+    int height = gpGlobals->height;
+    pglCopyTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, 0, 0, width, height, 0 );
+}
+
+void R_PostWrite( void )
+{
+    pglClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+
+    pglBegin( GL_QUADS );
+		pglVertex2f( -1.0f, -1.0f );
+		pglVertex2f(  1.0f, -1.0f );
+		pglVertex2f(  1.0f,  1.0f );
+		pglVertex2f( -1.0f,  1.0f );
+	pglEnd();
+}
+
+void R_PostNuke( void )
+{
+    R_PostRead();
+    R_ShaderUse( GL_SHADER_TEST );
+    R_PostWrite();
 }

@@ -1396,7 +1396,7 @@ static gl_texture_t *GL_TextureForName( const char *name )
 GL_AllocTexture
 ================
 */
-static gl_texture_t *GL_AllocTexture( const char *name, texFlags_t flags )
+gl_texture_t *GL_AllocTexture( const char *name, texFlags_t flags )
 {
 	gl_texture_t	*tex;
 	uint		i;
