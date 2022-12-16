@@ -19,27 +19,30 @@ R_DrawPost
 */
 void R_DrawPost( void )
 {
-    ASSERT( post_texture > 0 );
+    // ASSERT( post_texture > 0 );
 
     pglEnable( GL_TEXTURE_2D );
     pglDisable( GL_BLEND );
     pglDisable( GL_CULL_FACE );
 
-    pglMatrixMode( GL_TEXTURE );
-    pglLoadIdentity();
-    pglScalef( 1, 1, 1 );
+    // pglTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
+    // pglTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB_ARB, GL_REPLACE );
+    // pglTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB_ARB, GL_TEXTURE );
+
+    // pglMatrixMode( GL_TEXTURE );
+    // pglLoadIdentity();
+    // pglScalef( 1, 1, 1 );
 
     pglReadBuffer( GL_BACK );
     pglDrawBuffer( GL_BACK );
 
-    GL_SelectTexture( XASH_TEXTURE5 );
+    GL_SelectTexture( XASH_TEXTURE0 );
     pglBindTexture( GL_TEXTURE_2D, post_texture );
 
     R_PostNuke();
 
-    GL_SelectTexture( XASH_TEXTURE0 );
     R_ShaderUse( GL_SHADER_NONE );
-    pglBindTexture( GL_TEXTURE_2D, 0 );
+    // pglBindTexture( GL_TEXTURE_2D, 0 );
     pglEnable( GL_CULL_FACE );
 }
 
@@ -47,7 +50,7 @@ void R_PostRead( void )
 {
     int width = gpGlobals->width;
     int height = gpGlobals->height;
-    pglCopyTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, 0, 0, width, height, 0 );
+    pglCopyTexImage2D( GL_TEXTURE_2D, 0, GL_RGB8, 0, 0, width, height, 0 );
 }
 
 void R_PostWrite( void )
