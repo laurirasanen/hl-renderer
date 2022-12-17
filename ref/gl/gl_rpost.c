@@ -8,11 +8,15 @@ static CVAR_DEFINE_AUTO( gl_cg_red,   "1.0", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "co
 static CVAR_DEFINE_AUTO( gl_cg_green, "1.0", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "color grading green" );
 static CVAR_DEFINE_AUTO( gl_cg_blue,  "1.1", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "color grading blue"  );
 static CVAR_DEFINE_AUTO( gl_cg_gamma, "0.8", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "color grading gamma" );
-static CVAR_DEFINE_AUTO( gl_cg_gain,  "1.2", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "color grading exposure" );
+static CVAR_DEFINE_AUTO( gl_cg_gain,  "1.2", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "color grading gain" );
 
 static CVAR_DEFINE_AUTO( gl_vignette_strength,  "0.2", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "vignette strength" );
 static CVAR_DEFINE_AUTO( gl_vignette_distance,  "0.8", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "vignette distance" );
 static CVAR_DEFINE_AUTO( gl_vignette_curvature, "0.3", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "vignette curvature" );
+
+static CVAR_DEFINE_AUTO( gl_chromatic_aberration_strength, "0.1", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "chromatic aberration strength" );
+static CVAR_DEFINE_AUTO( gl_chromatic_aberration_distance, "0.2", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "chromatic aberration distance (how far to separate r&b channels)" );
+static CVAR_DEFINE_AUTO( gl_chromatic_aberration_bias,     "2.0", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "chromatic aberration bias (how much stronger the effect is away from center of the screen)" );
 
 //static gl_texture_t* post_texture = NULL;
 static unsigned int post_texture = 0;
@@ -28,6 +32,10 @@ void R_InitPost( void )
     gEngfuncs.Cvar_RegisterVariable( (cvar_t *)&gl_vignette_strength );
     gEngfuncs.Cvar_RegisterVariable( (cvar_t *)&gl_vignette_distance );
     gEngfuncs.Cvar_RegisterVariable( (cvar_t *)&gl_vignette_curvature );
+
+    gEngfuncs.Cvar_RegisterVariable( (cvar_t *)&gl_chromatic_aberration_strength );
+    gEngfuncs.Cvar_RegisterVariable( (cvar_t *)&gl_chromatic_aberration_distance );
+    gEngfuncs.Cvar_RegisterVariable( (cvar_t *)&gl_chromatic_aberration_bias );
 
     //post_texture = GL_AllocTexture( POST_TEXTURE, TF_NEAREST );
     pglGenTextures( 1, &post_texture );
@@ -62,6 +70,7 @@ void R_DrawPost( void )
 
     //R_PostTest();
     R_PostCC();
+    R_PostChromaticAberration();
     R_PostVignette();
 
     R_ShaderUse( GL_SHADER_NONE );
@@ -102,6 +111,16 @@ void R_PostCC( void )
     pglUniform3fARB( 1, gl_cg_red.value, gl_cg_green.value, gl_cg_blue.value );
     pglUniform1fARB( 2, gl_cg_gamma.value );
     pglUniform1fARB( 3, gl_cg_gain.value );
+    R_PostWrite();
+}
+
+void R_PostChromaticAberration( void )
+{
+    R_PostRead();
+    R_ShaderUse( GL_SHADER_CABR );
+    pglUniform1fARB( 1, gl_chromatic_aberration_strength.value );
+    pglUniform1fARB( 2, gl_chromatic_aberration_distance.value );
+    pglUniform1fARB( 3, gl_chromatic_aberration_bias.value );
     R_PostWrite();
 }
 
