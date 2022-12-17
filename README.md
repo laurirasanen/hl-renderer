@@ -1,11 +1,32 @@
-# A custom OpenGL renderer for [Xash3D FWGS](https://github.com/FWGS/xash3d-fwgs)
+# A modified OpenGL renderer for [Xash3D FWGS](https://github.com/FWGS/xash3d-fwgs)
+
+## Portable?
+No. I'm only testing this on a Linux desktop with `--enable-static-gl`.
+
+- - -
 
 ## Installation & Running
 0) See Xash3D FWGS instructions: https://github.com/FWGS/xash3d-fwgs
 1) Overwrite the default `ref_gl` binary with a precompiled one from [GitHub Releases](https://github.com/laurirasanen/hl-renderer/releases) or build your own
 2) Run Xash 3D
 
+- - -
+
 ## Build instructions
 0) See Xash3D FWGS instructions: https://github.com/FWGS/xash3d-fwgs
 1) Overwrite Xash 3D `ref/gl` source folder with the one in this repository
-2) Build Xash 3D
+2) Use `--enable-static-gl` when configuring waf
+3) Build Xash 3D
+
+- - -
+
+## Features
+
+### Basic color grading
+
+- `gl_cg_red <value>`
+- `gl_cg_green <value>`
+- `gl_cg_blue <value>`
+- `gl_cg_gamma <value>`
+
+![cg comparison image](/img/cg.png)
