@@ -80,6 +80,7 @@ void R_ShaderUse( int prog )
     if (prog == GL_SHADER_NONE)
     {
         pglUseProgramObjectARB(0);
+        return;
     }
 
     pglUseProgramObjectARB(gl_shaders[prog]);
