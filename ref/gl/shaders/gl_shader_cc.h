@@ -1,7 +1,7 @@
 #ifndef GL_SHADER_AO_H
 #define GL_SHADER_AO_H
 
-static char SHADER_VERT_AO[] =
+static char SHADER_VERT_CC[] =
     "#version 330 core\n"
 
     "layout(location = 0) in vec2 a_pos;\n"
@@ -14,18 +14,21 @@ static char SHADER_VERT_AO[] =
         "uv.xy = vec2(max(0, a_pos.x), max(0, a_pos.y));\n"
     "}";
 
-static char SHADER_FRAG_AO[] =
+static char SHADER_FRAG_CC[] =
     "#version 330 core\n"
 
     "in vec2 uv;\n"
 
     "uniform sampler2D uTex;\n"
+    "uniform vec3 uColor;\n"
+    "uniform float uGamma;\n"
 
     "out vec4 fragColor;\n"
 
     "void main()\n"
     "{\n"
-        "fragColor = texture(uTex, uv);\n"
+        "vec4 color = texture(uTex, uv) * vec4(uColor, 1.0);\n"
+        "fragColor = pow(color, vec4(1.0 / uGamma));\n"
     "}";
 
 #endif // GL_SHADER_AO_H

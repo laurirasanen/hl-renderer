@@ -2,12 +2,23 @@
 #include "gl_local.h"
 #include "gl_shader.h"
 #include "xash3d_mathlib.h"
+#include "cvar.h"
+
+static CVAR_DEFINE_AUTO( gl_cg_red,   "1.0", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "color grading red"   );
+static CVAR_DEFINE_AUTO( gl_cg_green, "1.0", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "color grading green" );
+static CVAR_DEFINE_AUTO( gl_cg_blue,  "1.0", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "color grading blue"  );
+static CVAR_DEFINE_AUTO( gl_cg_gamma, "1.0", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "color grading gamma" );
 
 //static gl_texture_t* post_texture = NULL;
 static unsigned int post_texture = 0;
 
 void R_InitPost( void )
 {
+    gEngfuncs.Cvar_RegisterVariable( (cvar_t *)&gl_cg_red );
+    gEngfuncs.Cvar_RegisterVariable( (cvar_t *)&gl_cg_green );
+    gEngfuncs.Cvar_RegisterVariable( (cvar_t *)&gl_cg_blue );
+    gEngfuncs.Cvar_RegisterVariable( (cvar_t *)&gl_cg_gamma );
+
     //post_texture = GL_AllocTexture( POST_TEXTURE, TF_NEAREST );
     pglGenTextures( 1, &post_texture );
 }
@@ -39,7 +50,8 @@ void R_DrawPost( void )
     GL_SelectTexture( XASH_TEXTURE0 );
     pglBindTexture( GL_TEXTURE_2D, post_texture );
 
-    R_PostNuke();
+    //R_PostTest();
+    R_PostCC();
 
     R_ShaderUse( GL_SHADER_NONE );
     // pglBindTexture( GL_TEXTURE_2D, 0 );
@@ -65,9 +77,18 @@ void R_PostWrite( void )
 	pglEnd();
 }
 
-void R_PostNuke( void )
+void R_PostTest( void )
 {
     R_PostRead();
     R_ShaderUse( GL_SHADER_TEST );
+    R_PostWrite();
+}
+
+void R_PostCC( void )
+{
+    R_PostRead();
+    R_ShaderUse( GL_SHADER_CC );
+    pglUniform3fARB( 1, gl_cg_red.value, gl_cg_green.value, gl_cg_blue.value );
+    pglUniform1fARB( 2, gl_cg_gamma.value );
     R_PostWrite();
 }
