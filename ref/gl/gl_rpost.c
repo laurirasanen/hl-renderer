@@ -6,8 +6,9 @@
 
 static CVAR_DEFINE_AUTO( gl_cg_red,   "1.0", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "color grading red"   );
 static CVAR_DEFINE_AUTO( gl_cg_green, "1.0", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "color grading green" );
-static CVAR_DEFINE_AUTO( gl_cg_blue,  "1.0", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "color grading blue"  );
-static CVAR_DEFINE_AUTO( gl_cg_gamma, "1.0", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "color grading gamma" );
+static CVAR_DEFINE_AUTO( gl_cg_blue,  "1.1", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "color grading blue"  );
+static CVAR_DEFINE_AUTO( gl_cg_gamma, "0.8", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "color grading gamma" );
+static CVAR_DEFINE_AUTO( gl_cg_gain,  "1.2", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "color grading exposure" );
 
 static CVAR_DEFINE_AUTO( gl_vignette_strength,  "0.2", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "vignette strength" );
 static CVAR_DEFINE_AUTO( gl_vignette_distance,  "0.8", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "vignette distance" );
@@ -22,6 +23,7 @@ void R_InitPost( void )
     gEngfuncs.Cvar_RegisterVariable( (cvar_t *)&gl_cg_green );
     gEngfuncs.Cvar_RegisterVariable( (cvar_t *)&gl_cg_blue );
     gEngfuncs.Cvar_RegisterVariable( (cvar_t *)&gl_cg_gamma );
+    gEngfuncs.Cvar_RegisterVariable( (cvar_t *)&gl_cg_gain );
 
     gEngfuncs.Cvar_RegisterVariable( (cvar_t *)&gl_vignette_strength );
     gEngfuncs.Cvar_RegisterVariable( (cvar_t *)&gl_vignette_distance );
@@ -99,6 +101,7 @@ void R_PostCC( void )
     R_ShaderUse( GL_SHADER_CC );
     pglUniform3fARB( 1, gl_cg_red.value, gl_cg_green.value, gl_cg_blue.value );
     pglUniform1fARB( 2, gl_cg_gamma.value );
+    pglUniform1fARB( 3, gl_cg_gain.value );
     R_PostWrite();
 }
 

@@ -22,6 +22,7 @@ static char SHADER_FRAG_CC[] =
     "uniform sampler2D uTex;\n"
     "uniform vec3 uColor;\n"
     "uniform float uGamma;\n"
+    "uniform float uGain;\n"
 
     "out vec4 fragColor;\n"
 
@@ -29,6 +30,7 @@ static char SHADER_FRAG_CC[] =
     "{\n"
         "vec4 color = texture(uTex, uv) * vec4(uColor, 1.0);\n"
         "fragColor = pow(color, vec4(1.0 / uGamma));\n"
+        "fragColor *= vec4(uGain);\n"
     "}";
 
 #endif // GL_SHADER_CC_H
