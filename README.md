@@ -1,4 +1,5 @@
 # A modified OpenGL renderer for [Xash3D FWGS](https://github.com/FWGS/xash3d-fwgs)
+Custom renderer for playing around with post-processing effects in half-life. Don't expect stability.
 
 ## Portable?
 No. I'm only testing this on a Linux desktop with `--enable-static-gl`.
