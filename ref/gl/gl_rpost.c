@@ -9,6 +9,10 @@ static CVAR_DEFINE_AUTO( gl_cg_green, "1.0", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "co
 static CVAR_DEFINE_AUTO( gl_cg_blue,  "1.0", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "color grading blue"  );
 static CVAR_DEFINE_AUTO( gl_cg_gamma, "1.0", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "color grading gamma" );
 
+static CVAR_DEFINE_AUTO( gl_vignette_strength,  "0.2", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "vignette strength" );
+static CVAR_DEFINE_AUTO( gl_vignette_distance,  "0.8", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "vignette distance" );
+static CVAR_DEFINE_AUTO( gl_vignette_curvature, "0.3", FCVAR_ARCHIVE|FCVAR_FILTERABLE, "vignette curvature" );
+
 //static gl_texture_t* post_texture = NULL;
 static unsigned int post_texture = 0;
 
@@ -18,6 +22,10 @@ void R_InitPost( void )
     gEngfuncs.Cvar_RegisterVariable( (cvar_t *)&gl_cg_green );
     gEngfuncs.Cvar_RegisterVariable( (cvar_t *)&gl_cg_blue );
     gEngfuncs.Cvar_RegisterVariable( (cvar_t *)&gl_cg_gamma );
+
+    gEngfuncs.Cvar_RegisterVariable( (cvar_t *)&gl_vignette_strength );
+    gEngfuncs.Cvar_RegisterVariable( (cvar_t *)&gl_vignette_distance );
+    gEngfuncs.Cvar_RegisterVariable( (cvar_t *)&gl_vignette_curvature );
 
     //post_texture = GL_AllocTexture( POST_TEXTURE, TF_NEAREST );
     pglGenTextures( 1, &post_texture );
@@ -52,6 +60,7 @@ void R_DrawPost( void )
 
     //R_PostTest();
     R_PostCC();
+    R_PostVignette();
 
     R_ShaderUse( GL_SHADER_NONE );
     // pglBindTexture( GL_TEXTURE_2D, 0 );
@@ -90,5 +99,15 @@ void R_PostCC( void )
     R_ShaderUse( GL_SHADER_CC );
     pglUniform3fARB( 1, gl_cg_red.value, gl_cg_green.value, gl_cg_blue.value );
     pglUniform1fARB( 2, gl_cg_gamma.value );
+    R_PostWrite();
+}
+
+void R_PostVignette( void )
+{
+    R_PostRead();
+    R_ShaderUse( GL_SHADER_VIGNETTE );
+    pglUniform1fARB( 1, gl_vignette_strength.value );
+    pglUniform1fARB( 2, gl_vignette_distance.value );
+    pglUniform1fARB( 3, gl_vignette_curvature.value );
     R_PostWrite();
 }

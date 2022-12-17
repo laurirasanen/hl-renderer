@@ -1,5 +1,5 @@
-#ifndef GL_SHADER_AO_H
-#define GL_SHADER_AO_H
+#ifndef GL_SHADER_CC_H
+#define GL_SHADER_CC_H
 
 static char SHADER_VERT_CC[] =
     "#version 330 core\n"
@@ -31,4 +31,4 @@ static char SHADER_FRAG_CC[] =
         "fragColor = pow(color, vec4(1.0 / uGamma));\n"
     "}";
 
-#endif // GL_SHADER_AO_H
+#endif // GL_SHADER_CC_H
