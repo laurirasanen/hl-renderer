@@ -7,7 +7,7 @@ No. I'm only testing this on a Linux desktop with `--enable-static-gl`.
 
 ## Installation & Running
 0) See Xash3D FWGS instructions: https://github.com/FWGS/xash3d-fwgs
-1) Overwrite the default `ref_gl` binary with a precompiled one from [GitHub Releases](https://github.com/laurirasanen/hl-renderer/releases) or build your own
+1) Overwrite the default `ref_gl` binary with a precompiled one ~~from [GitHub Releases](https://github.com/laurirasanen/hl-renderer/releases) (TODO)~~ or build your own
 2) Run Xash3D
 
 - - -
