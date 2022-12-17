@@ -28,5 +28,14 @@ No. I'm only testing this on a Linux desktop with `--enable-static-gl`.
 - `gl_cg_green <value>`
 - `gl_cg_blue <value>`
 - `gl_cg_gamma <value>`
+- `gl_cg_gain <value>`
 
 ![cg comparison image](/img/cg.png)
+
+### Vignette
+
+- `gl_vignette_strength <value>`
+- `gl_vignette_distance <value>`
+- `gl_vignette_curvature <value>`
+
+![vignette comparison image](/img/vignette.png)
