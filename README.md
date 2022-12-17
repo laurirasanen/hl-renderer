@@ -39,3 +39,11 @@ No. I'm only testing this on a Linux desktop with `--enable-static-gl`.
 - `gl_vignette_curvature <value>`
 
 ![vignette comparison image](/img/vignette.png)
+
+### Chromatic aberration
+
+- `gl_chromatic_aberration_strength <value>`
+- `gl_chromatic_aberration_distance <value>`
+- `gl_chromatic_aberration_bias <value>`
+
+![chromatic aberration comparison image](/img/chromatic_aberration.png)
